@@ -1,0 +1,69 @@
+<html>
+<table width="715" border="0" cellspacing="0" cellpadding="4">
+  <form method="post" action="#">
+  <tr>
+    <td width="165" >EmpNo:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="empno" type="text" id="empno" size="27"/>
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >Name:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="ename" type="text" id="ename" size="27"/>
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >Job:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="job" type="text" id="job" size="27"/>
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >DeptNo:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="deptno" type="text" id="deptno" size="27"/>
+    </td>
+  <tr>
+  <tr>
+    <td colspan="2" ><input type="submit" name="save" value="Insert Record" style="background-color:#ffb60f" />
+    </td>
+  <tr>
+  </form>
+</table>
+<?php
+  //update your database server here
+  $dbhost = 'sql6.freemysqlhosting.net';
+  $dbuser = 'xxx';
+  $dbpass = 'xxx';
+  $conn = mysqli_connect($dbhost, $dbuser, $dbpass);
+         
+  if(! $conn ) {
+    die('Could not connect: ' . mysqli_error());
+  }
+  echo 'Connected successfully';
+ 
+  if(!empty($_POST['save']))
+  {
+	$empno=$_POST['empno'];
+	$ename=$_POST['ename'];
+	$job=$_POST['job'];
+	$deptno=$_POST['deptno'];
+  	
+	//insert new emp into the database
+	$sql = "INSERT INTO emp(empno,ename,job,deptno) 
+		VALUES ('$empno', '$ename', '$job', '$deptno')";
+   
+	mysqli_select_db($conn,'sql6528819');
+   	$retval = mysqli_query($conn,$sql);
+   
+   	if(! $retval ) {
+      	   die('Could not get data: ' . mysqli_error());  	
+   	}
+	else {
+           echo '<br />New employee inserted successfully!';
+	}
+  } 
+  mysqli_close($conn);
+?>
+</html>

@@ -1,0 +1,110 @@
+<?php 
+   // Start the session to capture column values in a record
+   session_start();
+?>
+<html>
+<table width="715" border="0" cellspacing="0" cellpadding="4">
+  <form method="post" action="#">
+  <tr>
+    <td width="165" >EmpNo:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="empno" type="text" id="empno" size="27" value="<?php echo $_SESSION['empno']; ?>" />
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >Name:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="ename" type="text" id="ename" size="27" value="<?php echo $_SESSION['ename']; ?>" />
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >Job:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="job" type="text" id="job" size="27" value="<?php echo $_SESSION['job']; ?>" />
+    </td>
+  </tr>
+  <tr>
+    <td width="165" >DeptNo:</td>
+    <td width="190" bgcolor="#fff7f2">
+        <input name="deptno" type="text" id="deptno" size="27" value="<?php echo $_SESSION['deptno']; ?>" />
+    </td>
+  <tr>
+  <tr>
+    <td colspan="2" >
+        <input type="submit" name="search" value="Search Record" style="background-color:green; color:white" />
+        <input type="submit" name="update" value="Update Record" style="background-color:#ffb60f" />
+        <input type="submit" name="reset" value="Clear Form" style="background-color:blue; color:white" />
+    </td>
+  <tr>
+  </form>
+</table>
+<?php
+  //update your database server here
+  $dbhost = 'sql6.freemysqlhosting.net';
+  $dbuser = 'xxx';
+  $dbpass = 'xxx';
+  $conn = mysqli_connect($dbhost, $dbuser, $dbpass);
+         
+  if(! $conn ) {
+    die('Could not connect: ' . mysqli_error());
+  }
+  echo 'Connected successfully';
+ 
+  //this section is intended when user pressed the update button
+  if(!empty($_POST['update']))
+  {
+	$empno=$_POST['empno'];
+	$ename=$_POST['ename'];
+	$job=$_POST['job'];
+	$deptno=$_POST['deptno'];
+  	
+	//update record in the database
+	$sql = " UPDATE emp SET ename='$ename', job='$job', deptno='$deptno' WHERE empno='$empno' ";
+   
+	mysqli_select_db($conn,'xxx');
+   	$retval = mysqli_query($conn,$sql);
+   
+   	if(! $retval ) {
+      	   die('Could not update record: ' . mysqli_error());  	
+   	}
+	else {
+           echo '<br />Record updated successfully!';
+	}
+  } 
+  
+  //this section is intended when user pressed the search button
+  if(!empty($_POST['search']))
+  {
+	//get id of the record to search
+	$empno=$_POST['empno'];
+	
+	//select record from the database
+	$sql = " SELECT * FROM emp WHERE empno='$empno' ";
+   
+	mysqli_select_db($conn,'sql6528819');
+   	$retval = mysqli_query($conn,$sql);
+   
+   	if(! $retval ) {
+      	   die('Could not search the record: ' . mysqli_error());  	
+   	}
+	else {
+        //store the details of the record in record variable $display_rec
+        $display_rec = mysqli_fetch_assoc($retval);
+      
+        //create session variables for each column and store record values in it
+        $_SESSION['empno'] = $display_rec['empno'];
+        $_SESSION['ename'] = $display_rec['ename'];
+        $_SESSION['job'] = $display_rec['job'];
+        $_SESSION['deptno'] = $display_rec['deptno'];
+	}
+  } 
+  
+  //clear or reset the form
+  if(!empty($_POST['reset']))
+  {
+	//clear the session 
+    session_unset();
+  }
+  mysqli_close($conn);
+?>
+</html>

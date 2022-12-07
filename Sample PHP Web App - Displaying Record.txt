@@ -1,0 +1,48 @@
+<html>
+<table style="border: 1px solid black; text-align:left;">
+  <tr style="border: 1px solid black; background-color: green; color:yellow;">
+    <!-- Create your columns here -->
+    <th>Emp No</th>
+    <th>Name</th>
+    <th>Job</th>
+    <th>Department</th>
+  </tr>
+<?php
+  //update your database server here
+  $dbhost = 'sql6.freemysqlhosting.net';
+  $dbuser = 'xxx';
+  $dbpass = 'xxx';
+  $conn = mysqli_connect($dbhost, $dbuser, $dbpass);
+         
+  if(! $conn ) {
+    die('Could not connect: ' . mysqli_error());
+  }
+  echo 'Connected successfully';
+ 
+  // Write your SQL script here
+  // Read and display records from database table to the HTML table
+  $sql = "SELECT e.empno, e.ename, e.job, d.dname
+    FROM emp e, dept d
+    WHERE e.deptno=d.deptno";
+  
+   mysqli_select_db($conn,'xxx');
+   $retval = mysqli_query($conn,$sql);
+   
+   if(! $retval ) {
+      die('Could not get data: ' . mysqli_error());
+   }
+   
+   while($row = mysqli_fetch_assoc($retval)) {
+      echo '<tr style="border: 1px solid black; background-color: #F8F9F9;">';
+      // Display each of the columns here
+      echo "<th>" . $row["empno"] . " </th>";
+      echo "<th>" . $row["ename"] . " </th>";
+      echo "<th>" . $row["job"] . " </th>";
+      echo "<th>" . $row["dname"] . " </th>";
+      echo '<tr>';
+   }
+
+  mysqli_close($conn);
+?>
+</table>
+</html>

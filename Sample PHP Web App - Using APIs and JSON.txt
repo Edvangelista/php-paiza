@@ -1,0 +1,40 @@
+<?php
+//get id from the browser URL
+if(isset($_GET['id'])) {
+    $id = $_GET['id'];
+    
+    //open connection to mysql db
+    //$connection = mysqli_connect("database host","username","password","database name")
+    $connection = mysqli_connect("sql12.freemysqlhosting.net","xxx","xxx","xxx") 
+    or die("Error " . mysqli_error($connection));
+
+    if(!$connection ) {
+         die('Could not connect: ' . mysqli_error());
+    }
+    echo 'Connected successfully<br />';
+    
+    //fetch table rows from mysql db using the id
+    if($id == strtolower("all"))
+        $sql = "select * from emp";
+    else
+        $sql = "select * from emp where empno='$id'";
+    $result = mysqli_query($connection, $sql) or die("Error in Selecting " . mysqli_error($connection));
+
+    //if record exist, then create a json result
+    if(mysqli_num_rows($result) >= 1) {
+        //create an array of json
+        $emparray = array();
+        while($row =mysqli_fetch_assoc($result)) {
+            $emparray[] = $row;
+        }
+        echo json_encode($emparray);
+    }
+    else 
+        echo 'No record found or you provided an incorrect id!';
+
+    //close the db connection
+    mysqli_close($connection);
+}
+else
+    echo 'No id has been provided!';
+?>
